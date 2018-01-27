@@ -26,7 +26,7 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             // User is signed in.
-            console.log(user.email)
+            //console.log(user.email)
             $("#sign-in").html("Sign-Out");
             curUser = user;
             $("#appLoggedIn").show();
@@ -93,6 +93,9 @@ $(document).ready(function () {
     $("#participantsShowHideBtn").click(function () {
         $("#participantsPanel").toggle();
         $("#userPartFirstName").focus();
+    })
+    $("#analyticsShowHideBtn").click(function () {
+        $("#analyticsPanel").toggle();
     })
 
     //delete modal

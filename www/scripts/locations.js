@@ -10,7 +10,7 @@ $(document).ready(function () {
 
         //snapshot.forEach is a firebase method
         snapshot.forEach(function (data) {
-            console.log("The CHA " + data.key + " text is " + data.val().text);
+            //console.log("The CHA " + data.key + " text is " + data.val().text);
 
             // Hold the entity key in the button id
             var listHTML = "<li class='list-group-item clearfix'>" +
