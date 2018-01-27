@@ -1,0 +1,434 @@
+﻿﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>TCOE Admin App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .initiallyHidden {
+            display: none;
+        }
+
+        .toggleButton {
+            width: 75%;
+        }
+
+        .well {
+            background-color: oldlace;
+            min-height: 120px;
+        }
+
+        body {
+            font-size: large;
+            min-height: 1200px;
+            background-color: #dbdbdb;
+        }
+
+        .btn {
+            font-size: large;
+        }
+
+        .modal-header {
+            background-color: #dbdbdb;
+        }
+        .navbar-header {
+            width: 100%;
+            padding: 0 50px;
+        }
+
+        .second-button {
+            float: right;
+        }
+
+
+
+
+
+
+        .onoffswitch {
+            position: relative;
+            width: 103px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .onoffswitch-checkbox {
+            display: none;
+        }
+
+        .onoffswitch-label {
+            display: block;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid #999999;
+            border-radius: 13px;
+        }
+
+        .onoffswitch-inner {
+            display: block;
+            width: 200%;
+            margin-left: -100%;
+            transition: margin 0.3s ease-in 0s;
+        }
+
+            .onoffswitch-inner:before, .onoffswitch-inner:after {
+                display: block;
+                float: left;
+                width: 50%;
+                height: 35px;
+                padding: 0;
+                line-height: 35px;
+                font-size: 16px;
+                color: white;
+                font-family: Trebuchet, Arial, sans-serif;
+                font-weight: bold;
+                box-sizing: border-box;
+            }
+
+            .onoffswitch-inner:before {
+                content: "ON";
+                padding-left: 12px;
+                background-color: #5CB85C;
+                color: #FFFFFF;
+            }
+
+            .onoffswitch-inner:after {
+                content: "OFF";
+                padding-right: 12px;
+                background-color: #EEEEEE;
+                color: #999999;
+                text-align: right;
+            }
+
+        .onoffswitch-switch {
+            display: block;
+            width: 19px;
+            margin: 8px;
+            background: #FFFFFF;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 64px;
+            border: 2px solid #999999;
+            border-radius: 13px;
+            transition: all 0.3s ease-in 0s;
+        }
+
+        .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+            margin-left: 0;
+        }
+
+        .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+            right: 0px;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Carrer Expo Admin.</a>
+                <button id="sign-in" class="btn btn-sm navbar-btn second-button btn-danger"><i class="fa fa-spinner fa-spin"></i>Loading</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top:75px">
+        <div class="well text-center">
+
+            <h2>TCOE Career Expo App. Database Interface</h2>
+            <p>
+                This database interface changes data for all users in real-time... because, that's how we roll!
+                <br /><br />
+                Also note that deleting an entity will delete it's QR code,
+                <br />while editing an entity will not change it's QR code.
+            </p>
+        </div>
+        <p id="appLoggedOut" class="text-center">Please Log-In <i class="fa fa-sign-in"></i></p>
+        <div id="appLoggedIn">
+            <!-- Main Message **************************** -->
+            <div class="well">
+                <div class="text-center">
+                    <button id="mainMessageShowHideBtn" class="btn btn-primary toggleButton center-block"><span class="glyphicon glyphicon-retweet"> </span> Main Message</button>
+                    <br /><p>Front page message sent in real time to all participants.</p>
+                </div>
+                <div id="mainMessagePanel" class="initiallyHidden">
+                    <input id="userMessage" type="text" class="form-control" placeholder="Enter Message">
+                    <p><strong>Current Message:</strong> <span id="curMessage">Loading...</span></p>
+                    <button id="newMessageBtn" class="btn btn-success center-block"><span class="glyphicon glyphicon-share"> </span> Transmit Message</button>
+                    <br /><br />
+                    <input id="userSurveyURL" type="text" class="form-control" placeholder="Enter Survey URL">
+                    <p><strong>Current Survey:</strong> <span id="curSurveyURL">Loading...</span></p>
+                    <button id="newSurveyURLBtn" class="btn btn-success center-block"><span class="glyphicon glyphicon-pencil"> </span> Save URL</button>
+
+                    <br />
+                    <p><strong>Survey Switch</strong></p>
+
+                    <div class="onoffswitch">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                        <label class="onoffswitch-label" for="myonoffswitch">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+                    <p> <span id="surveyLoading">Loading...</span> </p>
+
+
+                </div>
+            </div>
+            <!-- LOCATIONS **************************** -->
+
+            <div class="well">
+                <div class="text-center">
+                    <button id="locationsShowHideBtn" class="btn btn-primary toggleButton center-block"><span class="glyphicon glyphicon-retweet"> </span> Locations</button>
+                    <br /><p>
+                        List of all locations to be found in the virtual tour,<br />
+                        with dynamically generated QR codes.
+                    </p>
+                </div>
+                <div id="locationPanel" class="initiallyHidden">
+                    <br />
+                    <button id="newLocationBtn" class="btn btn-success center-block"><span class="glyphicon glyphicon-qrcode"> </span> Add Location</button>
+                    <br />
+
+                    <p>Current Locations:</p>
+                    <ul id="locationList" class="list-group">
+                        <li class="list-group-item">loading...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- EVENTS **************************** -->
+            <div class="well">
+                <div class="text-center">
+                    <button id="eventsShowHideBtn" class="btn btn-primary toggleButton center-block"><span class="glyphicon glyphicon-retweet"> </span> Events</button>
+                    <br /><p>List of career expo events and times.</p>
+                </div>
+                <div id="eventsPanel" class="initiallyHidden">
+                    <br />
+                    <button id="newEventBtn" class="btn btn-success center-block"><span class="glyphicon glyphicon-qrcode"> </span> Add Event</button>
+                    <br />
+
+                    <p>Current Events:</p>
+                    <ul id="eventList" class="list-group">
+                        <li class="list-group-item">loading...</li>
+                    </ul>
+
+                </div>
+            </div>
+            <!-- PARTICIPANTS **************************** -->
+            <div class="well">
+                <div class="text-center">
+                    <button id="participantsShowHideBtn" class="btn btn-primary toggleButton center-block"><span class="glyphicon glyphicon-retweet"> </span> Participants</button>
+                    <br /><p>
+                        List of all participants, associated information<br />
+                        and dynamically generated QR codes.
+                    </p>
+                </div>
+                <div id="participantsPanel" class="initiallyHidden">
+                    <br />
+                    <button id="newParticipantBtn" class="btn btn-success center-block"><span class="glyphicon glyphicon-qrcode"> </span> Add Participant</button>
+                    <br />
+
+                    <p>Current Participants:</p>
+                    <ul id="participantList" class="list-group">
+                        <li class="list-group-item">loading...</li>
+                    </ul>
+
+                </div>
+            </div>
+
+
+
+        </div>
+        <!-- Last Div with Credits-->
+        <div class="well text-center">
+            <p>
+                This is a joint project between TCOE and COS SURGE FNL.
+            </p>
+            <div>
+                <img src="images/careerexpo.png" class="img-thumbnail" />
+                <img src="images/surge.png" class="img-thumbnail" />
+            </div>
+        </div>
+
+        <div id="footer" class="container">
+            <nav class="navbar navbar-inverse navbar-fixed-bottom">
+                <div class="navbar-inner navbar-content-center">
+                    <p class="text-muted credit text-center">TCOE, COS SURGE<br />eduNetSystems, A-Star Games</p>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ***************  Delete Modal ********************* -->
+        <div id="deleteModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Confirm Delete</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Deleting an entity will delete it's QR code.</p>
+                        <strong>
+                            <span id="deleteEntity">Name Here...</span><br />
+                            <span id="deletePath">Path Here...</span>
+                        </strong>
+                        <p>Are you sure you wish to delete?</p>
+                        <button id="deleteBtnYes" class="btn btn-danger center-block">Yes, Delete</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="deleteBtnNo" type="button" class="btn btn-default" data-dismiss="modal">No, Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- ***************  End Delete Modal ********************* -->
+        <!-- ***************  Edit Location Modal ********************* -->
+        <div id="editLocationModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit Location</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Editing Location will NOT change it's QR code.</p>
+
+                        <p class="text-center">Firebase database changes values for all users in real time!</p>
+                        <input id="editUserLocation" type="text" class="form-control" placeholder="Enter Location">
+                        <input id="editUserLocationHint" type="text" class="form-control" placeholder="Enter Hint">
+                        <input id="editUserLocationPoints" type="number" class="form-control" placeholder="Enter Points">
+                        <strong><span id="editPath">Path Here...</span></strong>
+                        <br />
+
+                        <p>Are you sure you wish to edit?</p>
+
+                        <button id="editLocationBtnYes" class="btn btn-danger center-block">Yes, Edit</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- ***************  End Edit Location Modal ********************* -->
+        <!-- ***************  Edit Event Modal ********************* -->
+        <div id="editEventModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit Event</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Editing Event will NOT change it's QR code.</p>
+
+                        <p class="text-center">Firebase database changes values for all users in real time!</p>
+                        <input id="editUserEvent" type="text" class="form-control" placeholder="Enter Event">
+                        <input id="editUserEventDesc" type="text" class="form-control" placeholder="Enter Description">
+                        <input id="editUserEventStartTime" type="text" class="form-control" placeholder="Enter Start Time">
+                        <input id="editUserEventEndTime" type="text" class="form-control" placeholder="Enter End Time">
+                        <strong><span id="editEventPath">Path Here...</span></strong>
+                        <br />
+
+                        <p>Are you sure you wish to edit?</p>
+
+                        <button id="editEventBtnYes" class="btn btn-danger center-block">Yes, Edit</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- ***************  End Edit Location Modal ********************* -->
+        <!-- ***************  Edit Participant Modal ********************* -->
+        <div id="editParticipantModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit Participant</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Editing Event will NOT change it's QR code.</p>
+
+                        <input id="editUserParticipantFirstName" type="text" class="form-control" placeholder="Enter first name">
+                        <input id="editUserParticipantLastName" type="text" class="form-control" placeholder="Enter last name">
+                        <input id="editUserParticipantRegistrationNumber" type="number" class="form-control" placeholder="Registration Number">
+                        <input id="editUserParticipantSchool" type="text" class="form-control" placeholder="Enter School">
+                        <input id="editUserParticipantScore" type="text" class="form-control" placeholder="Enter Score">
+                        <strong><span id="editParticipantPath">Path Here...</span></strong>
+                        <br />
+
+                        <p>Are you sure you wish to edit?</p>
+
+                        <button id="editParticipantBtnYes" class="btn btn-danger center-block">Yes, Edit</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- ***************  End Edit Participant Modal ********************* -->
+        <!-- ***************  sign-in Modal ********************* -->
+        <div id="signInModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- sign in modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Sign In</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>sign-in</p>
+
+                        <input id="signInEmail" type="email" class="form-control" placeholder="Email">
+                        <input id="signInPassword" type="password" class="form-control" placeholder="Password">
+
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button id="signInBtn" type="button" class="btn btn-default" data-dismiss="modal">Sign-In</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- ***************  sign-in Modal ********************* -->
+    </div>
+
+
+    <!-- Adding Firebase to Web App (copy code from Firebase) Initialize in index.js-->
+    <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+    <script src="scripts/index.js"></script>
+
+    <!-- Mas Scripts -->
+    <script src="scripts/message.js"></script>
+    <script src="scripts/locations.js"></script>
+    <script src="scripts/events.js"></script>
+    <script src="scripts/participants.js"></script>
+
+
+</body>
+</html>
