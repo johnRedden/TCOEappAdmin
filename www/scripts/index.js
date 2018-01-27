@@ -58,8 +58,8 @@ $(document).ready(function () {
     });
 
     $("#signInBtn").click(function () {
-        var email = $("#signInEmail").val();
-        var password = $("#signInPassword").val();
+        var email = "master@aol.com" //$("#signInEmail").val();
+        var password ="123456" //$("#signInPassword").val();
         var spinnerHtml = "<i class='fa fa-spinner fa-spin'></i>";
         $("#sign-in").html(spinnerHtml +" Loading");
         firebase.auth().signInWithEmailAndPassword(email, password).then(function (result) {
