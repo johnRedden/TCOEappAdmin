@@ -20,6 +20,7 @@ $(document).ready(function () {
                 "<br/><span>Points: " + data.val().points + "</span>" +
                 "<span class='pull-right button-group'>" +
                 "<button id='edit"+data.key+"' type='button' class='btn btn-success btn-sm'><span class='glyphicon glyphicon-edit'></span></button>" +
+                "<button id='print"+data.key+"' type='button' class='printBtn btn btn-primary btn-sm'><span class='glyphicon glyphicon-print'></span></button>"+
                 "<button id='"+data.key+"' type='button' class='btn btn-danger btn-sm'><span class='glyphicon glyphicon-remove'></span></button>"+
                 " </span>" +
                 "</li>"
@@ -40,7 +41,19 @@ $(document).ready(function () {
                 //edit occurs after modal confirmation
                 $("#editLocationModal").modal('show');
             });
+
+
+
         });
+        
+        //Print the div
+            $('.printBtn').click(function () {
+                $(this).parents('li:first').printThis({
+                    header: '<h2>TCOE Career Expo COS Tour</h2>',
+                    footer: '<p>Get the app to participate: Link Here Soon</p><br/><em>2018 COS SURGE and A-Star Games</em>'
+                });
+             });
+    
     });
 
     $("#newLocationBtn").click(function () {
